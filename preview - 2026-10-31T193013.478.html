@@ -1,0 +1,562 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#171020">
+<title>YOSRA | Vision 1 Vocabulary</title>
+<style>
+:root{
+ --bg:#100b18;
+ --panel:#21172d;
+ --panel2:#2c2039;
+ --purple:#a77add;
+ --pink:#e5a6ce;
+ --gold:#edce86;
+ --cream:#fff4e5;
+ --muted:#c5b5d2;
+ --green:#9cdbb4;
+ --red:#ff9c9c;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:radial-gradient(circle at top,#352044,var(--bg) 65%);
+ color:var(--cream);font-family:Tahoma,Arial,sans-serif;
+ min-height:100vh;
+}
+header{text-align:center;padding:28px 15px 20px}
+.brand{font-size:13px;letter-spacing:4px;color:var(--gold)}
+h1{font-family:Georgia,serif;font-size:34px;margin:12px 0;color:#f1d9b5}
+.subtitle{color:var(--muted);font-size:13px}
+.container{max-width:850px;margin:auto;padding:12px}
+.stats{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0 18px
+}
+.stat{
+ background:var(--panel);border:1px solid #594269;border-radius:15px;
+ padding:13px;text-align:center
+}
+.stat strong{display:block;color:var(--gold);font-size:21px}
+.stat span{font-size:11px;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:15px}
+.tab{
+ border:1px solid #76578b;background:var(--panel);color:var(--cream);
+ padding:12px 4px;border-radius:12px;font-weight:bold;font-size:12px
+}
+.tab.active{background:linear-gradient(120deg,#76509b,#ad79c5);border-color:var(--gold)}
+.section{display:none}
+.section.active{display:block}
+.search{
+ width:100%;padding:14px;border:1px solid #795b91;border-radius:12px;
+ background:#21172d;color:white;font-size:14px;margin-bottom:12px;outline:none
+}
+.search::placeholder{color:#b8a4c6}
+.word-card{
+ background:linear-gradient(145deg,#2b2037,#1d1528);
+ border:1px solid #57416b;border-radius:17px;
+ padding:15px;margin-bottom:10px;
+}
+.word-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.word{font-family:Georgia,serif;font-size:23px;color:var(--gold);direction:ltr;text-align:left;font-weight:bold}
+.number{font-size:11px;color:#bca8cc}
+.definition{
+ direction:ltr;text-align:left;font-family:Georgia,serif;
+ line-height:1.6;color:#eee0f2;font-size:14px;margin:12px 0 8px
+}
+.translation{font-size:14px;color:#f2c5dd;margin:8px 0}
+.syn{font-size:12px;color:#c6b4d5;direction:ltr;text-align:left;margin:7px 0}
+.controls{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.btn{
+ border:1px solid #86639d;background:#382849;color:white;
+ border-radius:10px;padding:10px 12px;font-size:12px;cursor:pointer
+}
+.btn.gold{background:#76528b;border-color:var(--gold)}
+.btn:active{transform:scale(.97)}
+.small{font-size:11px;color:var(--muted)}
+.hidden{display:none}
+.flash{
+ text-align:center;padding:28px 16px;min-height:290px;
+ display:flex;flex-direction:column;justify-content:center;align-items:center
+}
+.flash .word{font-size:38px;text-align:center}
+.flash .definition{text-align:center}
+.flash .translation{text-align:center;font-size:18px}
+.flash-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:15px}
+.quizbox{
+ background:var(--panel);border:1px solid #624779;border-radius:17px;
+ padding:20px
+}
+.question{font-size:23px;color:var(--gold);direction:ltr;text-align:center;margin:15px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.answer{
+ padding:14px 8px;background:#392847;border:1px solid #72558a;
+ border-radius:12px;color:white;font-size:14px;cursor:pointer
+}
+.answer.correct{background:#28533d;border-color:var(--green)}
+.answer.wrong{background:#663039;border-color:var(--red)}
+.feedback{text-align:center;margin:15px 0;min-height:25px}
+.progress{height:7px;background:#493653;border-radius:10px;margin:15px 0;overflow:hidden}
+.progress div{height:100%;width:0;background:var(--gold);transition:.3s}
+.footer{text-align:center;color:#a995b9;font-size:11px;padding:30px 10px}
+.notice{
+ background:#382a3c;border-right:3px solid var(--gold);
+ border-radius:9px;padding:12px;margin:12px 0;font-size:12px;line-height:1.8
+}
+@media(max-width:430px){
+ h1{font-size:29px}
+ .answers{grid-template-columns:1fr}
+ .word{font-size:21px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="brand">✦ Y O S R A ✦</div>
+ <h1>Vision 1</h1>
+ <div class="subtitle">Vocabulary Learning Studio · English</div>
+</header>
+
+<main class="container">
+
+<div class="stats">
+ <div class="stat"><strong id="total">38</strong><span>واژگان</span></div>
+ <div class="stat"><strong id="xp">0</strong><span>امتیاز XP</span></div>
+ <div class="stat"><strong id="done">0</strong><span>پاسخ صحیح</span></div>
+</div>
+
+<div class="tabs">
+ <button class="tab active" onclick="showTab('list',this)">📚 واژگان</button>
+ <button class="tab" onclick="showTab('flash',this)">🃏 فلش‌کارت</button>
+ <button class="tab" onclick="showTab('quiz',this)">🎯 آزمون</button>
+</div>
+
+<section id="list" class="section active">
+ <input class="search" id="search" placeholder="🔍 جست‌وجوی واژه یا معنی..." oninput="renderWords()">
+ <div class="notice">
+ برای شنیدن تلفظ انگلیسی روی 🔊 بزن.
+ تلفظ با صدای انگلیسی دستگاه اجرا می‌شود.
+ </div>
+ <div id="wordList"></div>
+</section>
+
+<section id="flash" class="section">
+ <div class="word-card flash">
+  <div class="small" id="flashCount">کارت ۱</div>
+  <div class="word" id="flashWord">exercise</div>
+  <div class="definition hidden" id="flashDef"></div>
+  <div class="translation hidden" id="flashFa"></div>
+  <div class="syn hidden" id="flashSyn"></div>
+  <div class="flash-actions">
+   <button class="btn" onclick="speak(current().word)">🔊 تلفظ</button>
+   <button class="btn gold" onclick="reveal()">نمایش پاسخ</button>
+  </div>
+ </div>
+ <div class="flash-actions">
+  <button class="btn" onclick="previousCard()">قبلی</button>
+  <button class="btn gold" onclick="nextCard()">بعدی ←</button>
+ </div>
+</section>
+
+<section id="quiz" class="section">
+ <div class="quizbox">
+  <div class="small">YOSRA VOCABULARY CHALLENGE</div>
+  <div class="progress"><div id="bar"></div></div>
+  <div class="small" id="quizCount">سؤال ۱</div>
+  <div class="question" id="question">exercise</div>
+  <div class="small" style="text-align:center">معنی درست کلمه را انتخاب کن:</div>
+  <div class="answers" id="answers"></div>
+  <div class="feedback" id="feedback"></div>
+  <div style="text-align:center">
+   <button class="btn gold" id="nextQuestion" onclick="nextQuiz()" disabled>سؤال بعدی ←</button>
+   <button class="btn" onclick="restartQuiz()">شروع دوباره</button>
+  </div>
+ </div>
+</section>
+
+<div class="footer">
+ YOSRA ENGINE · VISION 1 · VOCABULARY EDITION<br>
+ Learn · Listen · Practice · Grow
+</div>
+</main>
+
+<script>
+const words = [
+{
+word:"exercise",
+fa:"تمرین ورزشی",
+def:"physical or mental activity",
+syn:"SYN activity"
+},
+{
+word:"expression",
+fa:"حالت، اصطلاح",
+def:"communication, telling, utterance",
+syn:"SYN communication, telling, utterance"
+},
+{
+word:"farmer",
+fa:"قبلی، پیشین",
+def:"previous, prior",
+syn:"SYN previous, prior",
+note:"در تصویر واژه farmer دیده می‌شود؛ اما تعریف و مترادف آن مربوط به former است."
+},
+{
+word:"follow",
+fa:"پیروی کردن، دنبال کردن",
+def:"go after",
+syn:"SYN go after"
+},
+{
+word:"forest",
+fa:"جنگل",
+def:"a large area of land that is thickly covered with trees"
+},
+{
+word:"forestation",
+fa:"جنگل‌زایی",
+def:"forestation",
+syn:"ANT deforestation"
+},
+{
+word:"free",
+fa:"آزاد، رایگان",
+def:"not containing or taking in, without"
+},
+{
+word:"future",
+fa:"آینده",
+def:"the time that will come after the present",
+syn:"past, present, future"
+},
+{
+word:"goat",
+fa:"بز",
+def:"an animal like a sheep that has horns"
+},
+{
+word:"hardworking",
+fa:"سخت‌کوش",
+def:"putting a lot of effort into a job and doing it well",
+syn:"SYN industrious, diligent"
+},
+{
+word:"hear",
+fa:"شنیدن",
+def:"To listen to sb/sth"
+},
+{
+word:"helpful",
+fa:"مفید، کاربردی",
+def:"useful",
+syn:"SYN useful"
+},
+{
+word:"hope",
+fa:"امید، امیدوار بودن",
+def:"an optimistic sense or feeling that events will turn out well"
+},
+{
+word:"hopefully",
+fa:"امیدوارانه",
+def:"used to express what you hope will happen"
+},
+{
+word:"human",
+fa:"انسان",
+def:"a person rather than an animal or a machine",
+syn:"SYN person"
+},
+{
+word:"hunt",
+fa:"شکار کردن",
+def:"To chase and kill an animal"
+},
+{
+word:"hunter",
+fa:"شکارچی",
+def:"A person or an animal that tries to kill animals"
+},
+{
+word:"hurt",
+fa:"آسیب رساندن",
+def:"to cause physical pain to sb",
+syn:"SYN harm, damage"
+},
+{
+word:"idea",
+fa:"ایده، نظر",
+def:"notion, thought, opinion",
+syn:"SYN notion, thought, opinion"
+},
+{
+word:"identify",
+fa:"تشخیص دادن",
+def:"recognize, distinguish",
+syn:"SYN recognize, distinguish"
+},
+{
+word:"increase",
+fa:"افزایش دادن، زیاد شدن",
+def:"grow, boost, enlarge, raise, enhance",
+syn:"ANT decrease · SYN grow, boost, enlarge, raise, enhance"
+},
+{
+word:"injured",
+fa:"مجروح، جراحت",
+def:"damaged",
+syn:"SYN damaged"
+},
+{
+word:"instead",
+fa:"در عوض، به‌جای",
+def:"as an alternative or substitute"
+},
+{
+word:"interested in",
+fa:"علاقه‌مند بودن به",
+def:"keen on, fond of",
+syn:"SYN keen on, fond of"
+},
+{
+word:"jungle",
+fa:"جنگل",
+def:"an area of tropical forest where trees and plants grow thickly"
+},
+{
+word:"kill",
+fa:"کشتن",
+def:"to cause to die"
+},
+{
+word:"lake",
+fa:"دریاچه",
+def:"fresh or salt water that is surrounded on all sides by land"
+},
+{
+word:"leave",
+fa:"ترک کردن، رها کردن",
+def:"quit, give up, abandon",
+syn:"SYN quit, give up, abandon"
+},
+{
+word:"lifespan",
+fa:"طول عمر",
+def:"number of years that an animal or plant is expected to live"
+},
+{
+word:"lose",
+fa:"گم کردن، از دست دادن، باختن",
+def:"miss",
+syn:"SYN miss"
+},
+{
+word:"low",
+fa:"کم، پایین، اندک",
+def:"small, little, short",
+syn:"SYN small, little, short"
+},
+{
+word:"mean",
+fa:"معنی دادن",
+def:"denote, express, imply, represent, signify",
+syn:"SYN denote, express, imply, represent, signify"
+},
+{
+word:"mountain",
+fa:"کوه، کوهستان",
+def:"large elevated area on the earth's surface that rises to a summit"
+},
+{
+word:"movie",
+fa:"فیلم",
+def:"film",
+syn:"SYN film"
+},
+{
+word:"national",
+fa:"ملی",
+def:"connected with a particular nation"
+},
+{
+word:"nature",
+fa:"طبیعت",
+def:"all the plants, animals and things that exist in the universe that are not made by people"
+}
+];
+
+let xp=0,correctCount=0;
+let flashIndex=0;
+let quizIndex=0,quizCorrect=0,quizLocked=false;
+let quizOrder=[];
+
+document.getElementById("total").textContent=words.length;
+
+function speak(text){
+ if(!("speechSynthesis" in window)){
+  alert("مرورگر شما از تلفظ پشتیبانی نمی‌کند.");
+  return;
+ }
+ speechSynthesis.cancel();
+ const utter=new SpeechSynthesisUtterance(text);
+ utter.lang="en-US";
+ utter.rate=0.82;
+ utter.pitch=1;
+ const voices=speechSynthesis.getVoices();
+ const voice=voices.find(v=>v.lang==="en-US") ||
+             voices.find(v=>v.lang.startsWith("en"));
+ if(voice) utter.voice=voice;
+ speechSynthesis.speak(utter);
+}
+
+function showTab(id,button){
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ button.classList.add("active");
+ if(id==="flash") renderFlash();
+ if(id==="quiz" && !quizOrder.length) restartQuiz();
+}
+
+function renderWords(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const list=document.getElementById("wordList");
+ list.innerHTML="";
+ words.forEach((w,i)=>{
+  if(!w.word.toLowerCase().includes(q)&&!w.fa.includes(q)&&
+     !w.def.toLowerCase().includes(q))return;
+
+  const card=document.createElement("div");
+  card.className="word-card";
+  card.innerHTML=`
+   <div class="word-top">
+    <span class="number">VOCABULARY ${String(i+1).padStart(2,"0")}</span>
+    <span class="word">${w.word}</span>
+   </div>
+   <div class="definition">${w.def}</div>
+   ${w.syn?`<div class="syn">${w.syn}</div>`:""}
+   <div class="translation">معنی: ${w.fa}</div>
+   ${w.note?`<div class="notice">${w.note}</div>`:""}
+   <div class="controls">
+    <button class="btn gold" onclick="speak('${w.word.replace(/'/g,"\\'")}')">🔊 تلفظ کلمه</button>
+    <button class="btn" onclick="speak('${w.def.replace(/'/g,"\\'")}')">🔊 تعریف انگلیسی</button>
+    <button class="btn" onclick="speak('${(w.syn||w.fa).replace(/'/g,"\\'")}')">🔊 شنیدن مترادف</button>
+   </div>`;
+  list.appendChild(card);
+ });
+}
+renderWords();
+
+function current(){return words[flashIndex]}
+
+function renderFlash(){
+ const w=current();
+ document.getElementById("flashCount").textContent=
+  `کارت ${flashIndex+1} از ${words.length}`;
+ document.getElementById("flashWord").textContent=w.word;
+ document.getElementById("flashDef").textContent=w.def;
+ document.getElementById("flashFa").textContent="معنی: "+w.fa;
+ document.getElementById("flashSyn").textContent=w.syn||"";
+ ["flashDef","flashFa","flashSyn"].forEach(id=>
+  document.getElementById(id).classList.add("hidden"));
+}
+function reveal(){
+ ["flashDef","flashFa","flashSyn"].forEach(id=>
+  document.getElementById(id).classList.remove("hidden"));
+}
+function nextCard(){
+ flashIndex=(flashIndex+1)%words.length;
+ renderFlash();
+}
+function previousCard(){
+ flashIndex=(flashIndex-1+words.length)%words.length;
+ renderFlash();
+}
+renderFlash();
+
+function shuffle(a){
+ return [...a].sort(()=>Math.random()-.5);
+}
+
+function restartQuiz(){
+ quizOrder=shuffle(words);
+ quizIndex=0;
+ quizCorrect=0;
+ quizLocked=false;
+ document.getElementById("nextQuestion").disabled=true;
+ makeQuestion();
+}
+
+function makeQuestion(){
+ if(quizIndex>=quizOrder.length){
+  document.getElementById("question").textContent="🏆 تمام شد!";
+  document.getElementById("answers").innerHTML="";
+  document.getElementById("feedback").textContent=
+   `نتیجه: ${quizCorrect} پاسخ صحیح از ${words.length}`;
+  document.getElementById("quizCount").textContent="YOSRA CHALLENGE COMPLETED";
+  document.getElementById("bar").style.width="100%";
+  document.getElementById("nextQuestion").disabled=true;
+  document.getElementById("nextQuestion").textContent="آزمون تمام شد";
+  return;
+ }
+ quizLocked=false;
+ const w=quizOrder[quizIndex];
+ document.getElementById("question").textContent=w.word;
+ document.getElementById("quizCount").textContent=
+  `سؤال ${quizIndex+1} از ${words.length}`;
+ document.getElementById("bar").style.width=
+  (quizIndex/words.length*100)+"%";
+ document.getElementById("feedback").textContent="";
+ document.getElementById("nextQuestion").disabled=true;
+ document.getElementById("nextQuestion").textContent="سؤال بعدی ←";
+
+ let options=shuffle([
+  w,
+  ...shuffle(words.filter(x=>x!==w)).slice(0,3)
+ ]);
+ const box=document.getElementById("answers");
+ box.innerHTML="";
+ options.forEach(opt=>{
+  const b=document.createElement("button");
+  b.className="answer";
+  b.textContent=opt.fa;
+  b.onclick=()=>checkAnswer(b,opt,w);
+  box.appendChild(b);
+ });
+}
+
+function checkAnswer(button,opt,w){
+ if(quizLocked)return;
+ quizLocked=true;
+ const buttons=document.querySelectorAll(".answer");
+ buttons.forEach(b=>b.disabled=true);
+ if(opt===w){
+  button.classList.add("correct");
+  document.getElementById("feedback").textContent="🌟 آفرین! پاسخ درست است.";
+  xp+=10;
+  quizCorrect++;
+  correctCount++;
+ }else{
+  button.classList.add("wrong");
+  buttons.forEach(b=>{
+   if(b.textContent===w.fa)b.classList.add("correct");
+  });
+  document.getElementById("feedback").textContent=
+   "پاسخ صحیح: "+w.fa;
+ }
+ document.getElementById("xp").textContent=xp;
+ document.getElementById("done").textContent=correctCount;
+ document.getElementById("nextQuestion").disabled=false;
+}
+
+function nextQuiz(){
+ if(!quizLocked)return;
+ quizIndex++;
+ makeQuestion();
+}
+
+restartQuiz();
+</script>
+</body>
+</html>
